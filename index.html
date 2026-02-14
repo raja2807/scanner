@@ -2,10 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Love QR Game 💖</title>
+<title>Love Selfie Capture 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<script src="https://unpkg.com/html5-qrcode"></script>
 
 <style>
 body{
@@ -20,14 +18,37 @@ h1{
   margin-top:20px;
 }
 
-#reader{
+video{
   width:300px;
-  margin:20px auto;
   border-radius:15px;
-  overflow:hidden;
+  margin-top:20px;
+  border:3px solid #ff1744;
 }
 
-#messageBox{
+canvas{
+  display:none;
+}
+
+#photo{
+  width:300px;
+  border-radius:15px;
+  margin-top:20px;
+  display:none;
+  border:3px solid #ff1744;
+}
+
+button{
+  margin-top:20px;
+  padding:12px 25px;
+  font-size:16px;
+  border:none;
+  border-radius:25px;
+  background:linear-gradient(45deg,#ff1744,#000);
+  color:white;
+  cursor:pointer;
+}
+
+#message{
   margin:20px;
   font-size:20px;
   min-height:60px;
@@ -35,36 +56,38 @@ h1{
   background:#111;
   border-radius:12px;
 }
-
-#score{
-  font-size:22px;
-  margin-top:10px;
-  color:#ff4d6d;
-}
 </style>
 </head>
 
 <body>
 
-<h1>Scan My Love QR 💘</h1>
+<h1>Capture My Love 📸❤️</h1>
 
-<div id="reader"></div>
+<video id="video" autoplay playsinline></video>
+<br>
 
-<div id="score">Score: 0</div>
+<button onclick="takeSelfie()">Take Selfie 💘</button>
 
-<div id="messageBox">
-Scan a QR to see magic ✨
+<canvas id="canvas"></canvas>
+
+<img id="photo">
+
+<div id="message">
+Take a selfie to see magic ✨
 </div>
 
 <script>
-let score = 0;
+const video = document.getElementById("video");
+const canvas = document.getElementById("canvas");
+const photo = document.getElementById("photo");
+const messageBox = document.getElementById("message");
 
 // ❤️ 50 emotional messages
 const messages = [
 "I’m always with you 💖",
 "You are my favorite person 🥰",
 "My heart feels home with you 🏡❤️",
-"You make my world beautiful 🌍✨",
+"You make my world beautiful ✨",
 "I am lucky to have you 🍀💞",
 "You are my sweetest happiness 😊💕",
 "With you, everything feels right 💫",
@@ -113,34 +136,40 @@ const messages = [
 "Forever yours… only yours 💖"
 ];
 
-// 🎯 when QR scanned
-function onScanSuccess(decodedText, decodedResult) {
+// 🎥 start camera
+navigator.mediaDevices.getUserMedia({ video:true })
+.then(stream => {
+  video.srcObject = stream;
+})
+.catch(err => {
+  alert("Camera access needed 😢");
+});
 
-  // increase score
-  score++;
-  document.getElementById("score").innerText = "Score: " + score;
+// 📸 take selfie
+function takeSelfie(){
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(video, 0, 0);
+
+  const imageData = canvas.toDataURL("image/png");
+
+  // show photo
+  photo.src = imageData;
+  photo.style.display = "block";
 
   // random message
   const randomMessage =
     messages[Math.floor(Math.random() * messages.length)];
 
-  document.getElementById("messageBox").innerText = randomMessage;
+  messageBox.innerText = randomMessage;
+
+  // 💾 auto download
+  const a = document.createElement("a");
+  a.href = imageData;
+  a.download = "love_selfie.png";
+  a.click();
 }
-
-// 🚀 start scanner
-const html5QrCode = new Html5Qrcode("reader");
-
-Html5Qrcode.getCameras().then(devices => {
-  if (devices && devices.length) {
-    html5QrCode.start(
-      devices[0].id,
-      { fps: 10, qrbox: 250 },
-      onScanSuccess
-    );
-  }
-}).catch(err => {
-  console.log(err);
-});
 </script>
 
 </body>
