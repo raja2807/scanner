@@ -68,9 +68,7 @@ button{
 
 <!-- 🎥 camera -->
 <video id="video" autoplay playsinline></video>
-
 <canvas id="canvas" style="display:none;"></canvas>
-
 <img id="photo">
 
 <!-- 🔘 buttons -->
@@ -94,7 +92,10 @@ const retakeBtn = document.getElementById("retakeBtn");
 
 let stream = null;
 
-// ❤️ 50 emotional messages
+// 📁 selfie counter (persistent)
+let selfieCount = localStorage.getItem("rajalakshmiCount") || 0;
+
+// ❤️ emotional messages
 const messages = [
 "I’m always with you 💖",
 "You are my favorite person 🥰",
@@ -147,7 +148,7 @@ const messages = [
 "Forever yours… only yours 💖"
 ];
 
-// 🎥 start camera only after click
+// 🎥 start camera
 function startCamera(){
   navigator.mediaDevices.getUserMedia({ video:true })
   .then(s => {
@@ -179,15 +180,18 @@ function takeSelfie(){
   captureBtn.style.display = "none";
   retakeBtn.style.display = "inline-block";
 
-  // random message
+  // 💌 random message
   const randomMessage =
     messages[Math.floor(Math.random() * messages.length)];
   messageBox.innerText = randomMessage;
 
-  // auto download
+  // 📥 unique download name
+  selfieCount++;
+  localStorage.setItem("rajalakshmiCount", selfieCount);
+
   const a = document.createElement("a");
   a.href = imageData;
-  a.download = "love_selfie.png";
+  a.download = `rajalakshmi${selfieCount}.png`;
   a.click();
 
   // stop camera
