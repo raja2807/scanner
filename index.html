@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Love QR Game 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+<style>
+body{
+  margin:0;
+  font-family:Segoe UI, sans-serif;
+  background:#000;
+  color:white;
+  text-align:center;
+}
+
+h1{
+  margin-top:20px;
+}
+
+#reader{
+  width:300px;
+  margin:20px auto;
+  border-radius:15px;
+  overflow:hidden;
+}
+
+#messageBox{
+  margin:20px;
+  font-size:20px;
+  min-height:60px;
+  padding:15px;
+  background:#111;
+  border-radius:12px;
+}
+
+#score{
+  font-size:22px;
+  margin-top:10px;
+  color:#ff4d6d;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Scan My Love QR 💘</h1>
+
+<div id="reader"></div>
+
+<div id="score">Score: 0</div>
+
+<div id="messageBox">
+Scan a QR to see magic ✨
+</div>
+
+<script>
+let score = 0;
+
+// ❤️ 50 emotional messages
+const messages = [
+"I’m always with you 💖",
+"You are my favorite person 🥰",
+"My heart feels home with you 🏡❤️",
+"You make my world beautiful 🌍✨",
+"I am lucky to have you 🍀💞",
+"You are my sweetest happiness 😊💕",
+"With you, everything feels right 💫",
+"You are my forever person ♾️❤️",
+"My love for you grows every day 🌹",
+"You are my dream come true 😍",
+"I miss you even when you’re near 🥺",
+"You are my heart’s favorite song 🎶❤️",
+"I feel safe when I think of you 🤗",
+"You are my beautiful miracle ✨",
+"My world starts with you 🌅💖",
+"You are my endless smile 😊",
+"I love the way you exist 💕",
+"You are my happy place 🌈",
+"My heart chose you first 💘",
+"You are my sweetest addiction 😘",
+"I found love when I found you 💞",
+"You are my sunshine ☀️❤️",
+"My heart beats for you 💓",
+"You are my softest comfort 🤍",
+"I’m proud to love you 🥹💕",
+"You are my forever smile 😊❤️",
+"My love story is you 📖💘",
+"You make my life magical ✨",
+"You are my precious one 💎",
+"My heart whispers your name 🫶",
+"You are my daily happiness 🌸",
+"I fall for you every day 😍",
+"You are my warm hug 🤗❤️",
+"My world is brighter with you 🌟",
+"You are my sweet destiny 💫",
+"I love you more than words 💌",
+"You are my calm and chaos 🌊❤️",
+"My heart belongs to you 🔐💕",
+"You are my cutest blessing 🥰",
+"I want you in every lifetime ♾️",
+"You are my peaceful place 🕊️",
+"My smile starts with you 😊💖",
+"You are my heart’s home 🏠❤️",
+"I cherish you forever 🌹",
+"You are my lovely star ⭐",
+"My love for you is endless ♾️💘",
+"You are my everything 💞",
+"I choose you always 🤍",
+"You are my sweetest dream 🌙",
+"Forever yours… only yours 💖"
+];
+
+// 🎯 when QR scanned
+function onScanSuccess(decodedText, decodedResult) {
+
+  // increase score
+  score++;
+  document.getElementById("score").innerText = "Score: " + score;
+
+  // random message
+  const randomMessage =
+    messages[Math.floor(Math.random() * messages.length)];
+
+  document.getElementById("messageBox").innerText = randomMessage;
+}
+
+// 🚀 start scanner
+const html5QrCode = new Html5Qrcode("reader");
+
+Html5Qrcode.getCameras().then(devices => {
+  if (devices && devices.length) {
+    html5QrCode.start(
+      devices[0].id,
+      { fps: 10, qrbox: 250 },
+      onScanSuccess
+    );
+  }
+}).catch(err => {
+  console.log(err);
+});
+</script>
+
+</body>
+</html>
